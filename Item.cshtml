@@ -1,0 +1,198 @@
+@model MyApp.Web.Models.ViewModels.ItemViewModel<int?>
+@{
+    ViewBag.Title = "Item";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--NOTE: atmodel MyApp.Web.Models.ViewModels.ItemViewModel<int?>-->
+<!--LashGirlLogo-->
+<div class="card-header">
+    <img src="http://lashgirlstudio.com/wp-content/themes/lash/images/logo.png" border="0" width="497" height="114">
+</div>
+
+<!--Create Form-->
+<div class="col-md-12">
+    <div class="card">
+        <form id="form" method="get" action="/" class="form-horizontal">
+            <div class="card-header card-header-text" data-background-color="rose">
+                <h4 class="card-title"><strong>Input Item Info</strong></h4>
+            </div>
+            <div class="card-content">
+                <div class="row">
+                    <!--"#boxId"-->
+                    <label class="col-sm-2 label-on-left"><strong>Box ID</strong></label>
+                    <div class="col-sm-10">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <input type="number" class="form-control" id="boxId" name="boxId" value="" required>
+                            <span class="material-input"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--"#productId"-->
+                    <label class="col-sm-2 label-on-left"><strong>Product ID</strong></label>
+                    <div class="col-sm-10">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <input type="number" class="form-control" id="productId" name="productId" value="" required>
+                            <span class="material-input"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--"#price"-->
+                    <label class="col-sm-2 label-on-left"><strong>Price</strong></label>
+                    <div class="col-sm-10">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <input type="text" class="form-control" id="price" name="price" value="" required>
+                            <span class="material-input"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--"#subscriptionId"-->
+                    <label class="col-sm-2 label-on-left"><strong>Subscription ID</strong></label>
+                    <div class="col-sm-10">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <input type="number" class="form-control" id="subscriptionId" name="subscriptionId" value="" required>
+                            <span class="material-input"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--"#createdBy"-->
+                    <label class="col-sm-2 label-on-left"><strong>Created By</strong></label>
+                    <div class="col-sm-10">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <input type="text" class="form-control" id="createdBy" name="createBy" value="" required>
+                            <span class="material-input"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="card-footer text-center">
+            <!--"#submitBtn"-->
+            <button type="button" class="btn btn-rose" id="submitBtn"><strong>Submit</strong></button>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript" src="~/Scripts/MyApp.services.item.js"></script><!--use this script-->
+    <script type="text/javascript">
+        // global
+        MyApp.page.item = @Model.Item;
+
+        // startUp
+        MyApp.page.startUp = function () {
+            console.log("Start up is firing"); // testing purposes
+            MyApp.page.initializeValidation(); // validate
+            $("#submitBtn").on("click", MyApp.page.handlers.submitBtn); // this is to add a new Item Information Form
+        };
+
+        // validation
+        MyApp.page.initializeValidation = function () {
+            // set defaults for the entire plugin
+            jQuery.validator.setDefaults({
+                debug: true
+            });
+            // set rules and error messages
+            $("#form").validate({
+                rules: {
+                    "boxId": {
+                        required: true
+                        , digits: true
+                    }
+                    , "productId": {
+                        required: true
+                        , digits: true
+                    }
+                    , "price": {
+                        required: true
+                        , priceCheck: true
+                    }
+                    , "subscriptionId": {
+                        required: true
+                        , digits: true
+                    }
+                    , "createdBy": "required"
+                }
+                , messages: { // custom error messages - optional
+                    "boxId": {
+                        required: "Please enter Box ID"
+                        , digits: "Box ID must be composed of integers only"
+                    }
+                    , "productId": {
+                        required: "Please enter Product Id"
+                        , digits: "Product Id must be composed of integers only"
+                    }
+                    , "price": {
+                        required: "Please enter Price"
+                        , priceCheck: "Numbers and decimals only" // want numbers and decimals only
+                    }
+                    , "subscriptionId": {
+                        required: "Please enter Subscription ID"
+                        , digits: "Price must be composed of integers only"
+                    }
+                }
+                , errorPlacement: function (error, element) { // inserted this
+                    $(element).parent("div").addClass("has-error");
+                }
+            });
+            // validate for price
+            $.validator.addMethod("priceCheck", function (value) {
+                return /^(\d*\.\d{1,2}|\d+)$/.test(value); // NOTE: ^(\d*\.\d{1,2}|\d+)$
+            });
+        };
+
+        // readValues from user input
+        MyApp.page.readValues = function () {
+            var data = {
+                boxId: $("#boxId").val()
+                , productId: $("#productId").val()
+                , price: $("#price").val()
+                , subscriptionId: $("#subscriptionId").val()
+                , createdBy: $("#createdBy").val()
+            };
+            return data;
+        };
+
+        // CREATE BUTTON - submitBtn
+        MyApp.page.handlers.submitBtn = function () {
+            if ($("#form").valid()) { // run this if creating a new Item Info Form
+                MyApp.page.handlers.newItemForm();
+            }
+        };
+
+        // POST/INPUT handlers.newItemForm
+        MyApp.page.handlers.newItemForm = function () {
+            var data = MyApp.page.readValues();
+            MyApp.page.handlers.postItemInfo(data); // POST
+            $("#form")[0].reset(); // reset form after completion
+        };
+
+        /***AJAX Calls***/
+
+        // POST - CREATE (postItemInfo)
+        MyApp.page.handlers.postItemInfo = function (data) {
+            MyApp.services.item.postItemInfo(data, MyApp.page.handlers.contentReceived, MyApp.page.handlers.errorReceived);
+        };
+
+        // POST - CREATE SUCCESS
+        MyApp.page.handlers.contentReceived = function (data, status, xhr) {
+            console.log(data + "/" + status);
+            window.location.href = "/Item/Index"; // reroutes to the Item Home Page (http://localhost:1552/Item/Index)
+        };
+
+        // POST - CREATE ERROR
+        MyApp.page.handlers.errorReceived = function (xhr, status, errorThrown) {
+            console.log(status + "/" + errorThrown + "/" + xhr.ResponseText);
+        };
+
+    </script>
+}
