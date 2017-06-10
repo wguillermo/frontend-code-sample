@@ -1,0 +1,148 @@
+<div class="ng-scope page-header header-filter" data-parallax="active" ng-cloak
+         ng-controller="blogHeaderController as bhVm"
+         style="height:auto; width:auto; background-image: url({{bhVm.blogPost.coverImage}}" );>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center textBox">
+                    <h1 class="title" ng-cloak>{{bhVm.blogPost.title}}</h1>
+                    <h4 class="subject" ng-cloak>{{bhVm.blogPost.subject}}</h4>
+                    <br />
+                    <button type="button" class="btn btn-rose btn-round btn-lg" id="btnReadBlog" ng-click="bhVm.readBlog(blogContainer)"><i class="material-icons">format_align_left</i>Read Blog</button>
+                    <br />
+                </div>
+            </div>
+        </div>
+</div>
+
+<div class="ng-scope main main-raised" ng-controller="blogController as bVm">
+    <div class="container" id="blogContainer">
+        <div class="section section-text">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <h3 class="title" ng-cloak>{{bVm.blogPost.title}}</h3>
+                    <p ng-cloak ng-bind-html="bVm.blogPost.content"></p>
+                    <blockquote>
+                        <p ng-cloak>"{{bVm.blogPost.subject}}"</p>
+                        <small ng-cloak>{{bVm.blogPost.author}}</small>
+                    </blockquote>
+                </div>
+                <div class="section col-md-10 col-md-offset-1">
+                    <div class="col-md-4">
+                        <img class="bisectImage img-rounded img-responsive img-raised" alt="Raised Image" ng-cloak ng-src="{{bVm.blogPost.coverImage}}">
+                    </div>
+                </div>
+                <div class="content col-md-8 col-md-offset-2">
+                    <h3 class="title">Rest of the Story:</h3>
+                    <p ng-cloak ng-bind-html="bVm.blogPost.content">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section section-blog-info">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="blog-tags">
+                            <span class="label label-primary" ng-cloak>{{bVm.blogPost.tags}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="#" class="btn btn-google btn-round pull-right">
+                            <i class="fa fa-google"></i> 2327
+                        </a>
+                        <a href="#" class="btn btn-twitter btn-round pull-right">
+                            <i class="fa fa-twitter"></i> 9103
+                        </a>
+                        <a href="#" class="btn btn-facebook btn-round pull-right">
+                            <i class="fa fa-facebook-square"></i> 8725
+                        </a>
+                    </div>
+                </div>
+                <hr />
+                <div class="card card-profile card-plain">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="card-avatar">
+                                <a href="">
+                                    <img class="img img-responsive" ng-cloak ng-src="{{bVm.currentUserAvatar}}">
+                                </a>
+                                <div class="ripple-container"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <h4 class="author card-title" ng-cloak>{{bVm.blogPost.author}}</h4>
+                            <p class="description" ng-cloak>{{bVm.blogPost.title}}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-default pull-right btn-round">Follow</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+    <div class="section section-comments lgirl" id="commentsContainer">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="media-area comments-list" id="comment-list">
+                    <h3 class="title text-center">
+                        <span id="totalComments" ng-cloak>{{bVm.totalCount}}</span> Comments
+                    </h3>
+                    <div class="commentHere" ng-repeat="comment in bVm.blogComments.comments | orderBy: '-'" ng-include="'commentTemplate'" ng-cloak>
+                        {{comment.comments}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3 class="title text-center">Post your comment</h3>
+        <div class="media media-post">
+            <div class="col-md-8 col-md-offset-2">
+                <a class="pull-left author" href="">
+                    <div class="avatar">
+                        <img class="media-object img-responsive" alt="64x64" ng-cloak ng-src="{{bVm.currentUserAvatar}}">
+                    </div>
+                </a>
+                <div class="media-body">
+                    <textarea class="form-control" ng-model="bVm.commentDescription" placeholder="Write your comment here..." id="commentInput" rows="2"></textarea>
+                    <div class="media-footer">
+                        <span class="btn btn-primary btn-round btn-wd pull-right btnPostComment" ng-click="bVm.submitComment()">Post Comment</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="ng-scope container" ng-controller="simBlogController as sbVm">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="title text-center">Similar Stories</h2>
+                <div class="row">
+                    <div class="col-md-4" ng-repeat="singleBlog in sbVm.similarBlogs">
+                        <div class="card card-blog">
+                            <div class="card-image">
+                                <a href="{{singleBlog.slug}}" target="_blank">
+                                    <img class="img-rounded img img-raised img-responsive" ng-cloak ng-src="{{singleBlog.coverImage}}" />
+                                </a>
+                            </div>
+                            <div class="content">
+                                <h4 class="card-title">
+                                    <a href="{{singleBlog.slug}}" target="_blank">{{singleBlog.title | limitTo: 20}}</a>
+                                </h4>
+                                <p class="card-description">
+                                    {{singleBlog.content | limitTo: 45}}
+                                    <br />
+                                    <a href="{{singleBlog.slug}}" target="_blank"> Read More </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
